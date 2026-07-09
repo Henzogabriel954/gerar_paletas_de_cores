@@ -1,0 +1,23 @@
+{
+  "name": "library-color-palette-generator",
+  "version": "1.0.0",
+  "description": "A beautiful and interactive color palette generator for library websites, built with Node.js and Express.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": [
+    "color",
+    "palette",
+    "generator",
+    "library",
+    "website",
+    "design"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}

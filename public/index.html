@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Paletas de Cores para Biblioteca | BiblioCores</title>
+  <meta name="description" content="Gere paletas de cores automáticas e harmonize cores para o site da sua biblioteca escolar ou acadêmica. Escolha uma cor base e veja as variações instantaneamente.">
+  
+  <!-- Fontes do Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  
+  <!-- Estilos principais -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <!-- Container Principal -->
+  <div class="app-container">
+    
+    <!-- Sidebar de Controle -->
+    <aside class="sidebar">
+      <div class="brand">
+        <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+        <h1>BiblioCores</h1>
+      </div>
+      <p class="tagline">Paletas de cores profissionais e harmonizadas para bibliotecas e portais de leitura.</p>
+
+      <hr class="divider">
+
+      <!-- Seção 1: Cor Base -->
+      <div class="control-group">
+        <label class="group-title">1. Escolha a Cor Base</label>
+        
+        <div class="color-picker-wrapper">
+          <div class="color-picker-input-container">
+            <input type="color" id="baseColorPicker" value="#8B0000">
+            <div class="color-preview-circle" id="colorPreviewCircle"></div>
+          </div>
+          <div class="text-input-container">
+            <span class="hash-symbol">#</span>
+            <input type="text" id="baseColorHex" value="8B0000" maxlength="6" placeholder="8B0000">
+          </div>
+        </div>
+
+        <!-- Sugestões de cores para bibliotecas -->
+        <label class="sub-label">Sugestões Temáticas (Clássicos de Biblioteca):</label>
+        <div class="presets-grid">
+          <button class="preset-btn" data-color="#8B0000" style="background-color: #8B0000;" title="Vermelho Mahogany (Clássico/Imperial)"></button>
+          <button class="preset-btn" data-color="#1A365D" style="background-color: #1A365D;" title="Azul Oxford (Acadêmico/Sério)"></button>
+          <button class="preset-btn" data-color="#1E4D2B" style="background-color: #1E4D2B;" title="Verde Floresta (Tradição/Foco)"></button>
+          <button class="preset-btn" data-color="#B25B00" style="background-color: #B25B00;" title="Amber/Terracota (Conforto/Papel Antigo)"></button>
+          <button class="preset-btn" data-color="#553C9A" style="background-color: #553C9A;" title="Roxo Real (Conhecimento/Sofisticação)"></button>
+          <button class="preset-btn" data-color="#2D3748" style="background-color: #2D3748;" title="Cinza Grafite (Moderno/Digital)"></button>
+        </div>
+      </div>
+
+      <!-- Seção 2: Tipo de Harmonia -->
+      <div class="control-group">
+        <label class="group-title" for="harmonySelector">2. Harmonia Automática</label>
+        <div class="select-wrapper">
+          <select id="harmonySelector">
+            <option value="analogous" selected>Análoga (Variações próximas - ex: Vermelho & Laranja)</option>
+            <option value="complementary">Complementar (Contraste máximo - Opostos na roda)</option>
+            <option value="split">Complementar Dividida (Contraste equilibrado)</option>
+            <option value="triadic">Tríade (Três cores equilibradas e vibrantes)</option>
+            <option value="monochromatic">Monocromática (Mesma cor com diferentes tons)</option>
+            <option value="tetradic">Tétrade (Quatro cores - duplo contraste)</option>
+          </select>
+          <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+
+      <!-- Seção 3: Ajustes Finos -->
+      <div class="control-group">
+        <div class="range-header">
+          <label for="saturationRange">Saturação da Paleta</label>
+          <span id="saturationValue">100%</span>
+        </div>
+        <input type="range" id="saturationRange" min="10" max="100" value="100" class="slider">
+
+        <div class="range-header">
+          <label for="lightnessRange">Luminosidade Geral</label>
+          <span id="lightnessValue">50%</span>
+        </div>
+        <input type="range" id="lightnessRange" min="20" max="80" value="50" class="slider">
+      </div>
+
+      <hr class="divider">
+
+      <!-- Histórico de Paletas Salvas -->
+      <div class="control-group">
+        <label class="group-title">Favoritas / Salvas</label>
+        <div id="savedPalettesList" class="saved-palettes-list">
+          <p class="empty-message">Nenhuma paleta salva ainda. Clique em "Salvar Paleta" para guardar!</p>
+        </div>
+      </div>
+      
+      <!-- Footer da Sidebar -->
+      <div class="sidebar-footer">
+        <p>Desenvolvido para Bibliotecas Institucionais 📚</p>
+      </div>
+    </aside>
+
+    <!-- Área de Conteúdo Principal -->
+    <main class="main-content">
+      
+      <!-- Cabeçalho Principal -->
+      <header class="main-header">
+        <div class="header-info">
+          <h2>Gerador de Paleta de Cores</h2>
+          <p>Selecione uma cor para gerar combinações harmônicas e testá-las em tempo real no mockup da biblioteca.</p>
+        </div>
+        <div class="header-actions">
+          <button id="savePaletteBtn" class="btn btn-secondary">
+            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            Salvar Paleta
+          </button>
+          <button id="exportCssBtn" class="btn btn-primary">
+            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            Exportar Código
+          </button>
+        </div>
+      </header>
+
+      <!-- Cartões da Paleta Gerada -->
+      <section class="palette-section">
+        <h3 class="section-title">Paleta Harmônica Sugerida</h3>
+        <div class="palette-grid" id="paletteGrid">
+          <!-- Gerado dinamicamente por JS -->
+        </div>
+      </section>
+
+      <!-- Preview do Site da Biblioteca -->
+      <section class="preview-section">
+        <div class="preview-header">
+          <h3 class="section-title">Mockup Interativo do Site da Biblioteca</h3>
+          <div class="preview-controls">
+            <!-- Alternador de Tema do Mockup (Claro / Escuro) -->
+            <div class="theme-toggle-container">
+              <button class="theme-toggle-btn active" id="mockupLightBtn" title="Tema Claro">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                Claro
+              </button>
+              <button class="theme-toggle-btn" id="mockupDarkBtn" title="Tema Escuro">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                Escuro
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Frame do Mockup -->
+        <div class="mockup-frame" id="mockupFrame">
+          
+          <!-- Mockup Header/Navbar -->
+          <nav class="mockup-nav">
+            <div class="mockup-logo">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mockup-logo-icon">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+              <span>Biblioteca Central</span>
+            </div>
+            <ul class="mockup-nav-links">
+              <li><a href="#" class="active">Início</a></li>
+              <li><a href="#">Catálogo</a></li>
+              <li><a href="#">Serviços</a></li>
+              <li><a href="#">Espaços de Estudo</a></li>
+            </ul>
+            <button class="mockup-btn-primary">Área do Aluno</button>
+          </nav>
+
+          <!-- Mockup Hero Section -->
+          <section class="mockup-hero">
+            <div class="mockup-hero-content">
+              <h1>Portas abertas para o conhecimento e a imaginação.</h1>
+              <p>Explore milhares de títulos físicos, e-books e artigos científicos no acervo digital de nossa instituição.</p>
+              
+              <!-- Mockup Search bar -->
+              <div class="mockup-search-bar">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" placeholder="Pesquisar por título, autor, assunto ou ISBN..." disabled>
+                <button class="mockup-search-btn">Buscar</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Mockup Info Grid / Stats -->
+          <section class="mockup-stats">
+            <div class="stat-card">
+              <h3>+45.000</h3>
+              <p>Livros Físicos</p>
+            </div>
+            <div class="stat-card">
+              <h3>24/7</h3>
+              <p>Catálogo Digital</p>
+            </div>
+            <div class="stat-card">
+              <h3>15 Salas</h3>
+              <p>Estudo em Grupo</p>
+            </div>
+          </section>
+
+          <!-- Mockup Books / Content -->
+          <section class="mockup-books">
+            <h2>Destaques e Lançamentos</h2>
+            <div class="books-grid">
+              
+              <div class="book-card">
+                <div class="book-cover book-cover-1">
+                  <span>DOM CASMURRO</span>
+                </div>
+                <div class="book-details">
+                  <h4>Dom Casmurro</h4>
+                  <p>Machado de Assis</p>
+                  <span class="book-badge">Disponível</span>
+                </div>
+              </div>
+
+              <div class="book-card">
+                <div class="book-cover book-cover-2">
+                  <span>PEQUENO PRÍNCIPE</span>
+                </div>
+                <div class="book-details">
+                  <h4>O Pequeno Príncipe</h4>
+                  <p>Antoine de Saint-Exupéry</p>
+                  <span class="book-badge">Disponível</span>
+                </div>
+              </div>
+
+              <div class="book-card">
+                <div class="book-cover book-cover-3">
+                  <span>METODOLOGIA CIENTÍFICA</span>
+                </div>
+                <div class="book-details">
+                  <h4>Metodologia Científica</h4>
+                  <p>Marina de Andrade Marconi</p>
+                  <span class="book-badge reserved">Reservado</span>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Mockup Footer -->
+          <footer class="mockup-footer">
+            <p>© 2026 Biblioteca Universitária - Todos os direitos reservados.</p>
+            <p>Universidade Institucional - Av. Principal, 1000</p>
+          </footer>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal para exportação de código -->
+  <div id="exportModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Exportar Paleta de Cores</h4>
+        <button class="close-modal-btn" id="closeModalBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="css">CSS Variables</button>
+        <button class="modal-tab" data-tab="tailwind">Tailwind CSS</button>
+        <button class="modal-tab" data-tab="json">JSON</button>
+      </div>
+
+      <div class="tab-content active" id="tab-css">
+        <p class="tab-desc">Adicione estas variáveis ao arquivo CSS global do seu site (normalmente no seu `:root`):</p>
+        <pre><code id="codeCss"></code></pre>
+      </div>
+
+      <div class="tab-content" id="tab-tailwind">
+        <p class="tab-desc">Copie este código para a propriedade `theme.extend.colors` do seu arquivo `tailwind.config.js`:</p>
+        <pre><code id="codeTailwind"></code></pre>
+      </div>
+
+      <div class="tab-content" id="tab-json">
+        <p class="tab-desc">Paleta em formato JSON para utilizar em integrações ou APIs:</p>
+        <pre><code id="codeJson"></code></pre>
+      </div>
+
+      <div class="modal-footer">
+        <button id="copyCodeBtn" class="btn btn-primary">
+          <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copiar Código
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alerta flutuante de sucesso -->
+  <div id="toastNotification" class="toast">
+    <span id="toastMessage">Texto copiado!</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
